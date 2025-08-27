@@ -68,9 +68,10 @@
 }
 
 .brand {
-    font-size: 1.8rem;
+    font-family: "Updock", cursive;
+    font-size: 2.8rem;
     margin-bottom: 1rem;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .tagline {
