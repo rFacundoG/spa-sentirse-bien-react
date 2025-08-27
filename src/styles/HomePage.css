@@ -1,0 +1,15 @@
+/* Contenido de las páginas */
+.home-content {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.home-content h2 {
+    color: #3a5169;
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,103 @@
+.services-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.services-title {
+    text-align: center;
+    color: var(--color-title);
+    margin-bottom: 2rem;
+}
+
+.category-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.category-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-btn);
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.category-btn:hover {
+    color: white;
+    background: var(--color-btn);
+}
+
+.category-btn.active {
+    background: var(--color-btn);
+    color: white;
+    border-color: var(--color-btn);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    background: var(--color-secondary-background);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.service-content {
+    padding: 1.5rem;
+}
+
+.service-content h3 {
+    color: var(--color-title);
+    margin-bottom: 0.5rem;
+}
+
+.service-content p {
+    color: #666; /* descripcion */
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.service-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-title); /* linea de separacion */
+    color: var(--color-title); /* duracion y precio  */
+    font-size: 0.9rem;
+}
+
+.book-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--color-btn);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.book-btn:hover {
+    background: var(--color-btn-hover);
+}
