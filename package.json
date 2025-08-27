@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postbuild": "node scripts/replace-env.js",
+    "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
     "@react-firebase/auth": "^0.2.10",
