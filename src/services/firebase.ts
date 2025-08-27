@@ -16,20 +16,26 @@ import {
 } from "firebase/auth";
 import type { Service } from "../types/service";
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
+// Vite expone `import.meta.env.DEV` que es `true` cuando corres `npm run dev`.
+// En desarrollo, inicializamos Firebase manualmente con las variables de entorno.
+// En producción, Firebase se inicializa a través de los scripts en `index.html`.
+if (import.meta.env.DEV) {
+  const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  };
+  initializeApp(firebaseConfig);
+}
 
-const app = initializeApp(firebaseConfig);
-
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export default app;
+// getAuth() y getFirestore() usarán la app inicializada por defecto,
+// ya sea la que inicializamos manualmente en desarrollo o la que
+// inicializa Firebase Hosting en producción.
+export const auth = getAuth();
+export const db = getFirestore();
 
 // Operaciones para servicios
 export const servicesCollection = collection(db, "services");
