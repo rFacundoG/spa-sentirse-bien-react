@@ -19,25 +19,15 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      - name: Build
-        run: npm run build
-        env:
-          VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          
-      - name: Replace environment variables
-        run: node scripts/replace-env.js
-        env:
-          VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      - name: Build with environment variables
+        run: |
+          VITE_FIREBASE_API_KEY="${{ secrets.FIREBASE_API_KEY }}" \
+          VITE_FIREBASE_AUTH_DOMAIN="${{ secrets.FIREBASE_AUTH_DOMAIN }}" \
+          VITE_FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}" \
+          VITE_FIREBASE_STORAGE_BUCKET="${{ secrets.FIREBASE_STORAGE_BUCKET }}" \
+          VITE_FIREBASE_MESSAGING_SENDER_ID="${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}" \
+          VITE_FIREBASE_APP_ID="${{ secrets.FIREBASE_APP_ID }}" \
+          npm run build
           
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
