@@ -1,8 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaFacebook, FaInstagram, FaWhatsapp, FaTiktok, FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
+import {
+  FaBars,
+  FaTimes,
+  FaUser,
+  FaSignOutAlt,
+  FaUserCircle,
+  FaCalendarAlt,
+  FaCaretDown,
+  FaFacebook,
+  FaInstagram,
+  FaWhatsapp,
+  FaTiktok,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaEnvelope,
+  FaClock
+} from 'react-icons/fa';
 import AuthModal from './AuthModal';
-import RegisterModal from './RegisterModal'; // Asegúrate de importar RegisterModal
+import RegisterModal from './RegisterModal';
 import { useAuth } from '../hooks/useAuth';
 import { logoutUser } from '../services/firebase';
 import type { PropsWithChildren } from 'react';
@@ -14,6 +30,8 @@ export default function Layout({ children }: LayoutProps) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const { currentUser } = useAuth();
 
   // Detectar cambios en el tamaño de la pantalla
@@ -22,7 +40,6 @@ export default function Layout({ children }: LayoutProps) {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
 
-      // Cerrar menú al cambiar de móvil a desktop
       if (!mobile && isMenuOpen) {
         setIsMenuOpen(false);
         document.body.style.overflow = 'auto';
@@ -33,10 +50,25 @@ export default function Layout({ children }: LayoutProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, [isMenuOpen]);
 
+  // Cerrar menú de usuario al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = async () => {
     try {
       await logoutUser();
       if (isMobile) setIsMenuOpen(false);
+      setIsUserMenuOpen(false);
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
@@ -55,6 +87,10 @@ export default function Layout({ children }: LayoutProps) {
     }
   };
 
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+
   return (
     <div className={`layout ${isMenuOpen ? 'menu-open' : ''}`}>
       <header className="main-header">
@@ -66,7 +102,6 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </Link>
 
-          {/* Overlay para móvil */}
           {isMenuOpen && isMobile && (
             <div className="nav-overlay" onClick={closeMenu}></div>
           )}
@@ -80,16 +115,26 @@ export default function Layout({ children }: LayoutProps) {
 
             <div className="auth-section">
               {currentUser ? (
-                <div className="user-menu">
-                  <span className="user-greeting">
-                    <FaUser /> Hola, {currentUser.displayName || 'Usuario'}
-                  </span>
-                  <button
-                    className="auth-btn logout-btn"
-                    onClick={handleLogout}
-                  >
-                    <FaSignOutAlt /> Cerrar Sesión
-                  </button>
+                <div className="user-menu-container" ref={userMenuRef}>
+                  <div className="user-menu-trigger" onClick={toggleUserMenu}>
+                    <span className="user-greeting">
+                      <FaUser /> Hola, {currentUser.displayName || 'Usuario'} <FaCaretDown />
+                    </span>
+                  </div>
+                  {isUserMenuOpen && (
+                    <div className="user-dropdown-menu">
+                      <Link to="/perfil" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                        <FaUserCircle /> Mi Perfil
+                      </Link>
+                      <Link to="/turnos" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                        <FaCalendarAlt /> Mis Turnos
+                      </Link>
+                      <div className="dropdown-divider"></div>
+                      <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                        <FaSignOutAlt /> Cerrar Sesión
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="auth-buttons">
@@ -116,7 +161,6 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </nav>
 
-          {/* Botón hamburguesa solo visible en móvil */}
           {isMobile && (
             <button className="menu-toggle" onClick={toggleMenu} aria-label="Menú">
               {isMenuOpen ? <FaTimes /> : <FaBars />}
@@ -147,7 +191,6 @@ export default function Layout({ children }: LayoutProps) {
 
       <footer className="main-footer">
         <div className="footer-content">
-          {/* Sección izquierda: Logo y descripción */}
           <div className="footer-section footer-about">
             <div className="footer-logo">
               <img src="../logo-white.ico" alt="Spa Sentirse Bien" />
@@ -156,7 +199,6 @@ export default function Layout({ children }: LayoutProps) {
             <p>Tu lugar de relajación y bienestar en la ciudad. Te ayudamos a encontrar el equilibrio que merecés.</p>
           </div>
 
-          {/* Sección central: Contacto */}
           <div className="footer-section footer-contact">
             <h3>Contacto</h3>
             <div className="contact-info">
@@ -179,7 +221,6 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
 
-          {/* Sección derecha: Redes sociales y newsletter */}
           <div className="footer-section footer-social">
             <h3>Seguinos</h3>
             <div className="social-icons">
@@ -193,21 +234,15 @@ export default function Layout({ children }: LayoutProps) {
               <h4>Novedades</h4>
               <p>Suscríbete para recibir promociones exclusivas.</p>
               <div className="newsletter-form">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="newsletter-input"
-                />
+                <input type="email" placeholder="Tu email" className="newsletter-input" />
                 <button className="newsletter-btn">Suscribirse</button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Línea separadora */}
         <div className="footer-divider"></div>
 
-        {/* Copyright y enlaces legales */}
         <div className="footer-bottom">
           <p>© 2025 Spa Sentirse Bien. Todos los derechos reservados. | <a href="#">Política de privacidad</a> | <a href="#">Términos de servicio</a></p>
         </div>

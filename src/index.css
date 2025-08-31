@@ -33,7 +33,7 @@ main {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 5rem 1rem 1rem;
 }
 
 /* HEADER STYLES */
@@ -42,8 +42,10 @@ main {
   background: rgba(0, 0, 0, 0.6);
   color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -608,5 +610,125 @@ main {
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+/* Estilos para el menú de usuario */
+.user-menu-container {
+  position: relative;
+}
+
+.user-menu-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.user-greeting {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-greeting svg:last-child {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.user-menu-container:hover .user-greeting svg:last-child {
+  transform: rotate(180deg);
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-item svg {
+  color: #3a5169;
+  font-size: 1rem;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 0.25rem 0;
+}
+
+.logout-btn {
+  color: #e74c3c;
+}
+
+.logout-btn svg {
+  color: #e74c3c;
+}
+
+/* Responsive para el menú de usuario */
+@media (max-width: 768px) {
+  .user-dropdown-menu {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+    margin-top: 0;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .user-menu-trigger {
+    padding: 1rem 0;
   }
 }
